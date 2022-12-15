@@ -1,6 +1,6 @@
 ---
 title: "Gov 50 Final Project"
-author: "Your Name Here"
+author: "Nishant Mishra"
 description: "My final project"
 output:
   distill::distill_article:
@@ -9,6 +9,38 @@ output:
 
 
 
-## Project thoughts
+\newcommand{\noin}{\noindent}    
+\newcommand{\Var}{\text{Var}}    
+\newcommand{\Cov}{\text{Cov}}    
 
-I am interested in exploring data related to...
+
+```{r}
+set.seed(139)
+data <- read.csv('data/MERGED2018_19_PP.csv')
+```
+
+```{r}
+new_data <- data[data$DISTANCEONLY == 0, ]
+# new_data <- new_data[new_data$CURROPER == 1, ]
+```
+
+```{r}
+columns <- c('HIGHDEG', 'REGION', 'UGDS_WHITE', 'UGDS_BLACK', 'UGDS_HISP', 'UGDS_ASIAN', 'UGDS_AIAN', 'UGDS_NHPI', 'ADM_RATE', 'C150_4', 'C150_L4', 'SAT_AVG', 'UGDS', 'FSEND_COUNT', 'MEDIAN_HH_INC', 'POVERTY_RATE', 'UGDS_MEN', 'NPT4_PUB', 'NPT4_PRIV', 'UG25ABV', 'UG_NRA', 'PCIP04', 'PCIP05', 'PCIP09', 'PCIP11', 'PCIP14', 'PCIP23', 'PCIP26', 'PCIP27', 'PCIP38', 'PCIP42', 'PCIP45', 'PCIP50', 'PCIP51', 'PCIP52', 'PCIP54')
+new_data <- new_data[columns]
+```
+
+```{r}
+UGDS_MEN  = as.numeric(new_data$UGDS_MEN)[!is.na(new_data$UGDS_MEN )]
+hist(UGDS_MEN)
+NPT4_PUB = as.numeric(new_data$NPT4_PUB )[!is.na(new_data$NPT4_PUB  )]
+hist(NPT4_PUB)
+summary(NPT4_PUB)
+NPT4_PRIV = as.numeric(new_data$NPT4_PRIV )[!is.na(new_data$NPT4_PRIV )]
+hist(NPT4_PRIV)
+summary(NPT4_PRIV)
+boxplot(NPT4_PUB, NPT4_PRIV,
+        horizontal=TRUE,
+        names=c("NPT4_PUB (public)","NPT4_PRIV (private)"),
+        col=c("thistle","wheat"),
+        xlab="Price",
+        main="Average net price for undergraduate institutions")
