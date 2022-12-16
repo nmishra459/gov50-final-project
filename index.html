@@ -1578,7 +1578,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     Hence, for the sake of this paper not having to write every model/question twice, I focus on doing prediction and performing inference on the various predictors
     above, including average SAT and admissions rate, for traditional universities only.</p>
   
-  <p>image here</p>
+  <img src="Figure 1.png">
   
   <p>Since I was unsure of what factors I’d take into consideration in my final model during my data cleaning, I spent a lot of time formatting a lot of 
     factors that I didn’t end up using in my study. I hope that the cleaned data might come in handy for anyone in the future who’d like to to work with 
@@ -1586,10 +1586,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     enrollment by race, in traditional universities, which are UGDS_WHITE, UGDS_BLACK, UGDS_HISP, and UGDS_ASIAN, UGDS_AIAN, UGDS_NHPI.</p>
   
 <h2 id="project-thoughts">Results</h2>
-<p>In this section I chose to investigate specific questions regarding the association between the percentage of Asian undergraduates and median starting salary, and between the percentage of degrees awarded in each major and starting salary. You could repeat this analysis with any race, but doing it with many different races would far exceed the page limit of this paper, so I chose Asian..</p>
+<p>In this section I chose to investigate specific questions regarding the association between the percentage of Asian undergraduates and median starting salary, and between the percentage of degrees awarded in each major and starting salary. You could repeat this analysis with any race, but doing it with many different races would far exceed the page limit of this paper, so I chose Asian.</p>
 
   <p>Looking at the data, it’s clear that in the year 2015 the median annual earnings of Asian men and women surpassed that of all other races of men and women respectively. This correlation between race and earnings leads to the question: is there a significant relationship between the percentage of Asian students in a school and the median starting salary of that school’s graduates? To answer this question I fitted a linear model for the log of MD_EARN_WNE_P6, lm.asian, with the only predictor being UGDS_ASIAN (multiplied by a factor of 100 to change proportions to percents) with the resulting coefficients and their p-values from the relevant t-tests presented in the table below.</p>
-  <p>image</p>
+  <img src="Figure 2.png">
+
   <p>I  found that the regression coefficients for both the intercept and the UGDS_ASIAN predictor are extremely significant with p-values that are nearly 0. From the intercept we see that in a school with no Asian students (schools which we know exist from the table), the log median starting salary after graduation is e^10.55 ≃ 38, 177. For every 1% increase in the Asian population of a school, there is an increase of 0.021 in the log median starting salary of graduates from the school, or a multiplicative increase of e^0.021 ≃ 1.021 in starting salary - a pretty drastic increase! </p>
 
 <h2 id="project-thoughts">Conclusion</h2>
