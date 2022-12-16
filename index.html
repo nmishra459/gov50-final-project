@@ -1539,9 +1539,64 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   for the 2018-2019 academic year (which I used in lieu of the most recent academic year as it had fewer null and privacy suppressed measurements). 
   Some of the 2989 data points. included for each of the 6807 colleges/universities are various statistics on completion rate, faculty salaries, 
   student income, student demographics, student outcomes, and eventual income.</p>
+  
+ <p> The main response variable for this study is the median earnings of students working and not enrolled 6 years after entry, MD_EARN_WNE_P6 which 
+   I use as a proxy for median entry-level salary after graduation from a school. I cleaned our data by filtering out institutions that only provided 
+   distance learning (i.e., those with the DISTANCEONLY indicator equal to 1), removing all columns corresponding to predictors not listed below, and 
+   filtering out colleges with null or privacy suppressed values for any of the predictors I are interested in. The following is the list of the names 
+   of predictors I consider in this project, their data type (quantitative or categorical) and a brief description of what they represent.</p>
 
   
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+  <p>image here</p> 
+  
+ 
+   <p> The distribution of the response variable is heavily right-skewed, which makes sense as it is similar in shape to the overall income distribution 
+     in the United States, and the average American college graduate is likely not making above the median wage in the United States right out of college 
+     even if attending college does tend to be associated with higher salaries. Log-transforming this variable made its distribution almost perfectly 
+     symmetric. I also qualitatively examined what types of schools have high median earnings and low median earnings. I saw that nursing/medical schools
+     and engineering schools make up many of the schools at the very top of the spectrum, while cosmetology schools make up the bulk of the schools at 
+     the very bottom of the spectrum. </p>
+  
+  <p> I noted that since the dataset contains many non-traditional institutions of higher education (e.g. cosmetology schools), only around a quarter 
+    of the schools in the dataset report both SAT scores as well as admission rates. I labeled schools that report both of these metrics as traditional 
+    universities and those that fail to report at least one of these metrics as non-traditional universities. While this approach of separating universities 
+    is prone to some amount of error (e.g. some traditional universities do not require SAT scores for admission), I believe that the number of schools 
+    that fall into this gray area is sufficiently low for the sake of our analysis. Plotting a histogram of MD_EARN_WNE_P6 for traditional and non-traditional 
+    universities I saw that the distribution for traditional universities seems to have a higher minimum, mean, median and max and is more right-skewed than 
+    that for non-traditional universities (although both distributions do display a right skew). </p>
+  
+  <p> I will now formally test whether the distribution of median starting salaries is significantly different for the 1271 traditional universities versus 
+    the 3683 non-traditional universities. In particular, I conduct a rank-sum test to compare the distributions of median starting salaries in each university 
+    category. The only assumption of this non-parametric test is independence of observations, which seems loosely satisfied, as 6 it is reasonable that each 
+    university is independent from others. Our null hypothesis is that the true average quantile of median starting salaries in the two categories of university 
+    are the same, and our alternative hypothesis is that there is an association between category (traditional versus non-traditional) and the average quantile of 
+    outcomes, i.e., median starting salaries, of universities. I achieved a test statistic of W = 4128874 and a 95% confidence interval of [13493, 14565] for the 
+    difference in median starting salary between traditional universities and non-traditional universities, showcasing the advantage for students of attending a 
+    traditional university. This gives a p-value of < 2.2 · 10^−16 ≈ 0 < 0.05, meaning I reject the null at the α = 0.05 significance level and conclude the 
+    alternative hypothesis is true, or loosely that the distribution of median starting salaries is significantly different for traditional universities 
+    compared to non-traditional universities. Therefore, combining these data points into one large dataset might weaken the prediction and inference I can perform. 
+    Hence, for the sake of this paper not having to write every model/question twice, I focus on doing prediction and performing inference on the various predictors
+    above, including average SAT and admissions rate, for traditional universities only.</p>
+  
+  <p>image here</p>
+  
+  <p>Since I was unsure of what factors I’d take into consideration in my final model during my data cleaning, I spent a lot of time formatting a lot of 
+    factors that I didn’t end up using in my study. I hope that the cleaned data might come in handy for anyone in the future who’d like to to work with 
+    this dataset. I ended up settling on comparing statistics related to asian enrollment to median salary, leading me to focus on the percentage of 
+    enrollment by race, in traditional universities, which are UGDS_WHITE, UGDS_BLACK, UGDS_HISP, and UGDS_ASIAN, UGDS_AIAN, UGDS_NHPI.</p>
+  
+<h2 id="project-thoughts">Results</h2>
+<p>In this section I chose to investigate specific questions regarding the association between the percentage of Asian undergraduates and median starting salary, and between the percentage of degrees awarded in each major and starting salary. You could repeat this analysis with any race, but doing it with many different races would far exceed the page limit of this paper, so I chose Asian..</p>
+
+  <p>Looking at the data, it’s clear that in the year 2015 the median annual earnings of Asian men and women surpassed that of all other races of men and women respectively. This correlation between race and earnings leads to the question: is there a significant relationship between the percentage of Asian students in a school and the median starting salary of that school’s graduates? To answer this question I fitted a linear model for the log of MD_EARN_WNE_P6, lm.asian, with the only predictor being UGDS_ASIAN (multiplied by a factor of 100 to change proportions to percents) with the resulting coefficients and their p-values from the relevant t-tests presented in the table below.</p>
+  <p>image</p>
+  <p>I  found that the regression coefficients for both the intercept and the UGDS_ASIAN predictor are extremely significant with p-values that are nearly 0. From the intercept we see that in a school with no Asian students (schools which we know exist from the table), the log median starting salary after graduation is e^10.55 ≃ 38, 177. For every 1% increase in the Asian population of a school, there is an increase of 0.021 in the log median starting salary of graduates from the school, or a multiplicative increase of e^0.021 ≃ 1.021 in starting salary - a pretty drastic increase! </p>
+
+<h2 id="project-thoughts">Conclusion</h2>
+  <p>From our model, we can conclude that, in traditional universities, there is a positive modelable correlation between being asian and median salary in six years.  Assessing our results, however, it is important for me to state that I do not believe that this relationship is causal. One potential confounder in the analysis above is that the distribution of majors chosen by students of different races is not uniform. Furthermore, we know that salaries are not uniform across professions. Analyzing the dataset reveals that the highest tiers of earnings is almost entirely divided between Computer Science and Mathematics, Health, and Architecture and Engineering majors. Given that Asians are over-represented in STEM fields (under which two out of three of these majors would fall), there is a strong, probable case for major and median salary to have some sort of causal relationship . Failing to acknowledge these variables leaves us open to the danger of using formal methods to prop up racist stereotypes or mindsets. Future studies should test the presence of STEM in the data, and see if the presence of major choices overshadows the impact on median salary over race.</p>  
+  
+  
+  <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
