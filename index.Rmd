@@ -15,32 +15,64 @@ output:
 
 
 ```{r}
-set.seed(139)
+library(tidyverse)
+set.seed(50)
 data <- read.csv('data/MERGED2018_19_PP.csv')
+data <- data[data$DISTANCEONLY == 0, ]
+data <- as.data.frame(data)
 ```
 
 ```{r}
-new_data <- data[data$DISTANCEONLY == 0, ]
-# new_data <- new_data[new_data$CURROPER == 1, ]
+common <- c('MD_EARN_WNE_P6', 'HIGHDEG', 'REGION', 'UGDS_WHITE', 'UGDS_BLACK', 'UGDS_HISP', 'UGDS_ASIAN', 'UGDS_AIAN', 'UGDS_NHPI', 'UGDS', 'UGDS_MEN', 'NPT4_PUB', 'NPT4_PRIV', 'PCIP04', 'PCIP05', 'PCIP09', 'PCIP11', 'PCIP12', 'PCIP14', 'PCIP23', 'PCIP26', 'PCIP27', 'PCIP38', 'PCIP42', 'PCIP45', 'PCIP50', 'PCIP51', 'PCIP52', 'PCIP54')
+
+trad_cols <- c('ADM_RATE', 'SAT_AVG')
+
+data <- data[, c(both_cols, trad_cols)]
+data[data == ""] = NA
+data[data == "NULL"] = NA
+
+data <- as.data.frame(data)
+
+completeFun <- function(data, desiredCols) {
+  completeVec <- complete.cases(data[, desiredCols])
+  return(data[completeVec, ])
+}
+
+data <- completeFun(data, c('MD_EARN_WNE_P6', 'HIGHDEG', 'REGION', 'UGDS_WHITE', 'UGDS_BLACK', 'UGDS_HISP', 'UGDS_ASIAN', 'UGDS_AIAN', 'UGDS_NHPI', 'UGDS', 'UGDS_MEN', 'PCIP04', 'PCIP05', 'PCIP09', 'PCIP11', 'PCIP12', 'PCIP14', 'PCIP23', 'PCIP26', 'PCIP27', 'PCIP38', 'PCIP42', 'PCIP45', 'PCIP50', 'PCIP51', 'PCIP52', 'PCIP54'))
+
+trad <- data[!is.na(data$ADM_RATE) & !is.na(data$SAT_AVG), ]
+trad <- sapply(trad, as.numeric)
+trad <- as.data.frame(trad)
+trad$HIGHDEG <-factor(trad$HIGHDEG, levels=0:4, labels=c("Non-degree granting", "Certificate degree", "Associate degree", "Bachelor's degree", "Graduate degree"))
+trad$REGION <- factor(trad$REGION, levels=0:9, labels=c("U.S. Service Schools", "New England", "Mid East", "Great Lakes", "Plains", "Southeast", "Southwest", "Rocky Mountains", "Far West", "Outlying Areas"))
+
+nontrad <- data[is.na(data$ADM_RATE) | is.na(data$SAT_AVG), ]
+nontrad <- subset(nontrad, select = -c(ADM_RATE, SAT_AVG))
+nontrad <- sapply(nontrad, as.numeric)
+nontrad <- as.data.frame(nontrad)
+nontrad$HIGHDEG <-factor(nontrad$HIGHDEG, levels=0:4, labels=c("Non-degree granting", "Certificate degree", "Associate degree", "Bachelor's degree", "Graduate degree"))
+nontrad$REGION <- factor(nontrad$REGION, levels=0:9, labels=c("U.S. Service Schools", "New England", "Mid East", "Great Lakes", "Plains", "Southeast", "Southwest", "Rocky Mountains", "Far West", "Outlying Areas"))
+
+hist(trad$MD_EARN_WNE_P6, xlab = "median salary", main="median salary after 6 years")
+hist(log(trad$MD_EARN_WNE_P6), xlab = "log median salary", main="log median salary after 6 years" )
+
+wilcox.test(x = trad$MD_EARN_WNE_P6, y = nontrad$MD_EARN_WNE_P6,
+            alternative = 'two.sided',
+            exact = FALSE,
+            correct = FALSE,
+            conf.int = TRUE)
 ```
 
 ```{r}
-columns <- c('HIGHDEG', 'REGION', 'UGDS_WHITE', 'UGDS_BLACK', 'UGDS_HISP', 'UGDS_ASIAN', 'UGDS_AIAN', 'UGDS_NHPI', 'ADM_RATE', 'C150_4', 'C150_L4', 'SAT_AVG', 'UGDS', 'FSEND_COUNT', 'MEDIAN_HH_INC', 'POVERTY_RATE', 'UGDS_MEN', 'NPT4_PUB', 'NPT4_PRIV', 'UG25ABV', 'UG_NRA', 'PCIP04', 'PCIP05', 'PCIP09', 'PCIP11', 'PCIP14', 'PCIP23', 'PCIP26', 'PCIP27', 'PCIP38', 'PCIP42', 'PCIP45', 'PCIP50', 'PCIP51', 'PCIP52', 'PCIP54')
-new_data <- new_data[columns]
+library(xtable)
+trad$UGDS_ASIAN <- trad$UGDS_ASIAN * 100
+
+lm.asian <- lm(log(MD_EARN_WNE_P6) ~ UGDS_ASIAN, data=trad)
+xtable(summary(lm.asian))
+
+plot(log(MD_EARN_WNE_P6) ~ UGDS_ASIAN, data=trad)
+plot(lm.asian$residuals ~ lm.asian$fitted.values)
+qqnorm(lm.asian$residuals)
+qqline(lm.asian$residuals)
 ```
 
-```{r}
-UGDS_MEN  = as.numeric(new_data$UGDS_MEN)[!is.na(new_data$UGDS_MEN )]
-hist(UGDS_MEN)
-NPT4_PUB = as.numeric(new_data$NPT4_PUB )[!is.na(new_data$NPT4_PUB  )]
-hist(NPT4_PUB)
-summary(NPT4_PUB)
-NPT4_PRIV = as.numeric(new_data$NPT4_PRIV )[!is.na(new_data$NPT4_PRIV )]
-hist(NPT4_PRIV)
-summary(NPT4_PRIV)
-boxplot(NPT4_PUB, NPT4_PRIV,
-        horizontal=TRUE,
-        names=c("NPT4_PUB (public)","NPT4_PRIV (private)"),
-        col=c("thistle","wheat"),
-        xlab="Price",
-        main="Average net price for undergraduate institutions")
