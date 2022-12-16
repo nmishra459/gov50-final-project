@@ -1493,7 +1493,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Gov 50 Final Project","description":"My final project","authors":[{"author":"Your Name Here","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}]}
+{"title":"Gov 50 Final Project","description":"My final project","authors":[{"author":"Nishant Mishra","authorURL":"#","affiliation":"&nbsp;","affiliationURL":"#","orcidID":""}]}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -1503,7 +1503,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--/radix_placeholder_site_before_body-->
 
 <div class="d-title">
-<h1>Gov 50 Final Project</h1>
+<h1>Gov 50 Final Project - Analyzing Median Salary Data From US School Census Reports</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
 <p>My final project</p>
@@ -1511,14 +1511,36 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 <div class="d-byline">
   
-  Your Name Here
+  Nishant Mishra
   
 
 </div>
 
 <div class="d-article">
-<h2 id="project-thoughts">Project thoughts</h2>
-<p>I am interested in exploring data related to…</p>
+<h2 id="project-thoughts">Introduction</h2>
+<p>Does the university a student goes to affect their starting salary? Helping students evaluate whether university 
+  is worth it is ever more important in the context of increasing university tuition costs college-tuition and 
+  fewer well-paying jobs requiring college degrees. If a student can look at a few characteristics of an institution,
+  knowing their association with median starting salary, it may influence their decision of whether to attend.  
+  I focus on collecting data at the institutional-level and not the individual-level owing to higher quality, 
+  government-collected data for the former and privacy concerns in the latter. What, then, are some possible interesting 
+  attributes of institutions to examine?</p>
+  
+  <p>Perhaps most obviously, the type of the institution and whether they grant certificate degrees, graduate degrees,
+    or somewhere in between, seems to intuitively be associated with how well their graduates do: it would seem that higher 
+    levels of degrees are more valued than lower levels in the job market. Additionally, the percentage of students graduating
+    with degrees in lucrative fields like engineering and computer science would be the place to start, as the wealth of high-paying 
+    jobs offered in the booming technology industry would seem to increase an institution's median starting salary. It’s also interesting 
+    to look racial data, and see how some might be able to use formal methods to prop up stereotypic narratives about race, college, and wealth. </p>
+  
+<h2 id="project-thoughts">The Data</h2>
+<p>The dataset I’m using for this cross-sectional study is from the U.S. Department of Education’s College Scorecard website and contains 
+  “aggregate data for each institution, [including] information on institutional characteristics, enrollment, student aid, osts, and student outcomes” 
+  for the 2018-2019 academic year (which I used in lieu of the most recent academic year as it had fewer null and privacy suppressed measurements). 
+  Some of the 2989 data points. included for each of the 6807 colleges/universities are various statistics on completion rate, faculty salaries, 
+  student income, student demographics, student outcomes, and eventual income.</p>
+
+  
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
